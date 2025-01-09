@@ -80,12 +80,15 @@
 
     <script>
 document.addEventListener('DOMContentLoaded', () => {
-    // UTC 기준 목표 날짜 설정
     const targetDate = new Date('2024-01-12T23:59:59+09:00'); // KST 기준
+    console.log('목표 날짜 (KST):', targetDate);
 
     function updateCountdown() {
         const now = new Date();
+        console.log('현재 시간 (브라우저):', now);
+
         const diff = targetDate - now;
+        console.log('남은 시간 (ms):', diff);
 
         if (diff <= 0) {
             document.getElementById('countdown').innerHTML = "종료되었습니다";
