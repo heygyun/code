@@ -81,7 +81,7 @@
     <script>
 document.addEventListener('DOMContentLoaded', () => {
     // UTC 기준 목표 날짜 설정
-    const targetDate = new Date(Date.UTC(2024, 0, 12, 14, 59, 59)); // UTC 2024-01-12 23:59:59 KST
+    const targetDate = new Date('2024-01-12T23:59:59+09:00'); // KST 기준
 
     function updateCountdown() {
         const now = new Date();
