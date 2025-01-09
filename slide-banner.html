@@ -54,7 +54,7 @@
             padding: 10px;
             text-align: center;
             font-size: 16px;
-            background: #111;
+            background: #999;
             color: #111;
             user-select: none; /* 텍스트 선택 방지 */
         }
@@ -150,28 +150,42 @@
         const totalCards = 8;
         const visibleCards = 4;
         const gap = 10;
+        const cardWidth = carousel.offsetWidth / visibleCards - gap;
         let currentIndex = 0;
         let startX = 0;
         let moveX = 0;
         let isDragging = false;
 
         // 슬라이드 이동 함수
-        function updateCarouselPosition() {
-            const offset = -(currentIndex * (carousel.offsetWidth / visibleCards + gap));
+        function updateCarouselPosition(loop = true) {
+            if (loop) {
+                if (currentIndex < 0) {
+                    currentIndex = totalCards - visibleCards;
+                } else if (currentIndex > totalCards - visibleCards) {
+                    currentIndex = 0;
+                }
+            }
+            const offset = -(currentIndex * (cardWidth + gap));
             carousel.style.transform = `translateX(${offset}px)`;
         }
 
         // 이전 버튼 클릭
         prevBtn.addEventListener('click', () => {
-            currentIndex = Math.max(0, currentIndex - 1);
+            currentIndex--;
             updateCarouselPosition();
         });
 
         // 다음 버튼 클릭
         nextBtn.addEventListener('click', () => {
-            currentIndex = Math.min(totalCards - visibleCards, currentIndex + 1);
+            currentIndex++;
             updateCarouselPosition();
         });
+
+        // 자동 슬라이드 (4초마다 1칸 이동)
+        setInterval(() => {
+            currentIndex++;
+            updateCarouselPosition();
+        }, 4000);
 
         // 드래그 이벤트
         carousel.addEventListener('mousedown', (e) => {
@@ -183,15 +197,15 @@
         carousel.addEventListener('mousemove', (e) => {
             if (!isDragging) return;
             moveX = e.pageX - startX;
-            carousel.style.transform = `translateX(calc(${-(currentIndex * (carousel.offsetWidth / visibleCards + gap))}px + ${moveX}px))`;
+            carousel.style.transform = `translateX(calc(${-(currentIndex * (cardWidth + gap))}px + ${moveX}px))`;
         });
 
         carousel.addEventListener('mouseup', () => {
             isDragging = false;
             if (moveX > 50) {
-                prevBtn.click();
+                currentIndex--;
             } else if (moveX < -50) {
-                nextBtn.click();
+                currentIndex++;
             }
             moveX = 0;
             carousel.style.transition = 'transform 0.3s ease-in-out';
@@ -206,12 +220,6 @@
                 updateCarouselPosition();
             }
         });
-
-        // 자동 슬라이드 (4초마다 1칸 이동)
-        setInterval(() => {
-            currentIndex = (currentIndex + 1) % (totalCards - visibleCards + 1);
-            updateCarouselPosition();
-        }, 4000);
 
         // 초기화
         updateCarouselPosition();
