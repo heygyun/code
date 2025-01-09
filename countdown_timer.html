@@ -3,12 +3,111 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Test Script</title>
+    <title>Countdown Banner</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background: linear-gradient(to right, black, #c04c41);
+            color: white;
+        }
+
+        .banner {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 90%;
+            max-width: 1200px;
+            padding: 20px;
+            background: transparent;
+        }
+
+        .timer {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .timer span {
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+
+        .countdown {
+            display: flex;
+            font-size: 36px;
+            font-weight: bold;
+        }
+
+        .countdown div {
+            margin: 0 5px;
+            padding: 5px 10px;
+            background: black;
+            color: white;
+            border-radius: 4px;
+        }
+
+        .cta {
+            font-size: 20px;
+            text-decoration: none;
+            color: white;
+            font-weight: bold;
+        }
+
+        .cta:hover {
+            text-decoration: underline;
+        }
+    </style>
 </head>
 <body>
-    <h1>JavaScript Test</h1>
+    <div class="banner">
+        <div class="timer">
+            <span>참여 마감까지: 웨일리 다이어트 4기</span>
+            <div class="countdown" id="countdown">
+                <div id="days">00</div> :
+                <div id="hours">00</div> :
+                <div id="minutes">00</div> :
+                <div id="seconds">00</div>
+            </div>
+        </div>
+        <a href="#" class="cta">프로그램 구경가기 &gt;</a>
+    </div>
+
     <script>
-        console.log('JavaScript 로드 성공');
+document.addEventListener('DOMContentLoaded', () => {
+    // UTC 기준 목표 날짜 설정
+    const targetDate = new Date('2024-01-12T23:59:59+09:00'); // KST 기준
+
+    function updateCountdown() {
+        const now = new Date();
+        const diff = targetDate - now;
+
+        if (diff <= 0) {
+            document.getElementById('countdown').innerHTML = "종료되었습니다";
+            clearInterval(timerInterval);
+            return;
+        }
+
+        const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+        document.getElementById('days').textContent = days.toString().padStart(2, '0');
+        document.getElementById('hours').textContent = hours.toString().padStart(2, '0');
+        document.getElementById('minutes').textContent = minutes.toString().padStart(2, '0');
+        document.getElementById('seconds').textContent = seconds.toString().padStart(2, '0');
+    }
+
+    const timerInterval = setInterval(updateCountdown, 1000);
+    updateCountdown();
+});
+
     </script>
 </body>
 </html>
