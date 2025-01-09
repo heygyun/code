@@ -1,0 +1,87 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Video and Text Section</title>
+    <style>
+        html, body {
+            margin: 0;
+            padding: 0;
+            height: 100%; /* html과 body 높이를 100%로 설정 */
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5; /* 배경색 */
+            display: flex;
+            justify-content: center; /* 가로 중앙 정렬 */
+            align-items: center; /* 세로 중앙 정렬 */
+            box-sizing: border-box;
+        }
+
+        .section {
+            width: 100%;
+            max-width: 1232px; /* 섹션 최대 너비 */
+            display: flex;
+            align-items: center; /* 수직 정렬 */
+            justify-content: space-between; /* 동영상과 텍스트 사이 여백 */
+            background-color: #fff; /* 섹션 배경색 */
+            padding: 20px; /* 섹션 안쪽 여백 */
+            border-radius: 10px; /* 섹션 라운드 테두리 */
+        }
+
+        .video-container {
+            flex: 1; /* 동영상이 공간을 균등히 차지 */
+            margin-right: 20px; /* 텍스트와 간격 */
+        }
+
+        .video-container iframe {
+            width: 100%;
+            height: 350px;
+            border-radius: 10px; /* 동영상 라운드 테두리 */
+            border: none;
+        }
+
+        .text-container {
+            flex: 1; /* 텍스트가 공간을 균등히 차지 */
+            color: #333;
+        }
+
+        .text-container h2 {
+            font-size: 28px;
+            font-weight: bold;
+            margin: 0 0 10px;
+        }
+
+        .text-container p {
+            font-size: 16px;
+            line-height: 1.6;
+            margin: 0 0 5px;
+        }
+
+        .text-container span {
+            display: block;
+            font-size: 14px;
+            color: #888;
+        }
+    </style>
+</head>
+<body>
+    <div class="section">
+        <!-- 동영상 박스 -->
+        <div class="video-container">
+            <iframe 
+                src="https://www.youtube.com/embed/example" 
+                allowfullscreen 
+                title="YouTube Video">
+            </iframe>
+        </div>
+
+        <!-- 텍스트 박스 -->
+        <div class="text-container">
+            <h2>126만 다이어트 유튜버</h2>
+            <p>비타민 신지니가 만든<br>탈다이어트 프로그램</p>
+            <span>뇌과학 기반 + 심리학 자료 + 700명 고객 컨설팅</span>
+        </div>
+    </div>
+</body>
+</html>
