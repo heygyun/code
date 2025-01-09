@@ -3,98 +3,53 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Countdown Banner</title>
+    <title>Countdown Timer</title>
     <style>
         body {
-            margin: 0;
-            padding: 0;
             font-family: Arial, sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            background: linear-gradient(to right, black, #c04c41);
-            color: white;
-        }
-
-        .banner {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            width: 90%;
-            max-width: 1200px;
-            padding: 20px;
-            background: transparent;
+            text-align: center;
+            margin-top: 50px;
         }
 
         .timer {
-            display: flex;
-            flex-direction: column;
-            align-items: flex-start;
-        }
-
-        .timer span {
-            font-size: 18px;
-            margin-bottom: 10px;
+            font-size: 24px;
         }
 
         .countdown {
-            display: flex;
             font-size: 36px;
             font-weight: bold;
-        }
-
-        .countdown div {
-            margin: 0 5px;
-            padding: 5px 10px;
-            background: black;
-            color: white;
-            border-radius: 4px;
-        }
-
-        .cta {
-            font-size: 20px;
-            text-decoration: none;
-            color: white;
-            font-weight: bold;
-        }
-
-        .cta:hover {
-            text-decoration: underline;
         }
     </style>
 </head>
 <body>
-    <div class="banner">
-        <div class="timer">
-            <span>참여 마감까지: 웨일리 다이어트 4기</span>
-            <div class="countdown" id="countdown">
-                <div id="days">00</div> :
-                <div id="hours">00</div> :
-                <div id="minutes">00</div> :
-                <div id="seconds">00</div>
-            </div>
-        </div>
-        <a href="#" class="cta">프로그램 구경가기 &gt;</a>
+    <h1>Countdown Timer</h1>
+    <p class="timer">남은 시간:</p>
+    <div class="countdown" id="countdown">
+        <span id="days">00</span>일
+        <span id="hours">00</span>시간
+        <span id="minutes">00</span>분
+        <span id="seconds">00</span>초
     </div>
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            const targetDate = new Date(2024, 0, 12, 23, 59, 59);
+            // 1월 12일 자정(2024-01-12T23:59:59) 설정
+            const targetDate = new Date('2024-01-12T23:59:59');
 
             function updateCountdown() {
                 const now = new Date();
-                const diff = targetDate - now;
+                const timeDiff = targetDate - now;
 
-                if (diff <= 0) {
+                if (timeDiff <= 0) {
                     document.getElementById('countdown').innerHTML = "종료되었습니다";
+                    clearInterval(timerInterval); // 타이머 정지
                     return;
                 }
 
-                const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-                const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-                const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-                const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+                const days = Math.floor(timeDiff / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((timeDiff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((timeDiff % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((timeDiff % (1000 * 60)) / 1000);
 
                 document.getElementById('days').textContent = days.toString().padStart(2, '0');
                 document.getElementById('hours').textContent = hours.toString().padStart(2, '0');
@@ -102,8 +57,8 @@
                 document.getElementById('seconds').textContent = seconds.toString().padStart(2, '0');
             }
 
-            setInterval(updateCountdown, 1000);
-            updateCountdown();
+            const timerInterval = setInterval(updateCountdown, 1000);
+            updateCountdown(); // 초기 호출
         });
     </script>
 </body>
