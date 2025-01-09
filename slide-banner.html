@@ -9,7 +9,7 @@
             margin: 0;
             padding: 0;
             font-family: Arial, sans-serif;
-            background-color: #fff; /* 전체 배경 흰색 */
+            background-color: #fff;
             color: #333;
             display: flex;
             justify-content: center;
@@ -22,16 +22,13 @@
             width: 80%;
             max-width: 1200px;
             overflow: hidden;
-            display: flex;
-            justify-content: center;
-            align-items: center;
         }
 
         .carousel {
             display: flex;
-            transition: transform 0.3s ease-in-out; /* 슬라이드 속도 조정 */
-            gap: 10px; /* 카드 간의 간격 */
-            cursor: grab; /* 드래그 가능하도록 커서 변경 */
+            transition: transform 0.3s ease-in-out;
+            gap: 10px;
+            cursor: grab;
         }
 
         .carousel:active {
@@ -39,8 +36,8 @@
         }
 
         .carousel-card {
-            flex: 0 0 calc((100% - 30px) / 4); /* 화면에 4개 표시 (간격 포함) */
-            border-radius: 10px; /* 카드의 라운드 값 */
+            flex: 0 0 calc((100% - 30px) / 4); /* 화면에 4개 표시 */
+            border-radius: 10px;
             background: #f5f5f5;
             overflow: hidden;
         }
@@ -55,7 +52,7 @@
             padding: 10px;
             text-align: center;
             font-size: 16px;
-            background: gray; /* 텍스트 박스 배경 */
+            background: gray;
             color: #fff;
         }
 
@@ -72,7 +69,7 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            z-index: 10; /* 버튼이 카드 위로 오도록 설정 */
+            z-index: 10;
         }
 
         .carousel-btn.left {
@@ -151,9 +148,9 @@
         const visibleCards = 4;
         const gap = 10; // 카드 간 간격
         let currentIndex = 0;
-        let isDragging = false;
         let startX = 0;
-        let scrollLeft = 0;
+        let moveX = 0;
+        let isDragging = false;
 
         // 슬라이드 이동 함수
         function updateCarouselPosition() {
@@ -173,39 +170,47 @@
             updateCarouselPosition();
         });
 
+        // 드래그 시작
+        carousel.addEventListener('mousedown', (e) => {
+            isDragging = true;
+            startX = e.pageX;
+            carousel.style.transition = 'none'; // 드래그 중에는 애니메이션 제거
+        });
+
+        // 드래그 이동
+        carousel.addEventListener('mousemove', (e) => {
+            if (!isDragging) return;
+            moveX = e.pageX - startX;
+            carousel.style.transform = `translateX(calc(${-(currentIndex * (carousel.offsetWidth / visibleCards + gap))}px + ${moveX}px))`;
+        });
+
+        // 드래그 종료
+        carousel.addEventListener('mouseup', () => {
+            isDragging = false;
+            if (moveX > 50) {
+                prevBtn.click(); // 왼쪽 이동
+            } else if (moveX < -50) {
+                nextBtn.click(); // 오른쪽 이동
+            }
+            moveX = 0;
+            carousel.style.transition = 'transform 0.3s ease-in-out'; // 애니메이션 복원
+            updateCarouselPosition();
+        });
+
+        carousel.addEventListener('mouseleave', () => {
+            if (isDragging) {
+                isDragging = false;
+                moveX = 0;
+                carousel.style.transition = 'transform 0.3s ease-in-out'; // 애니메이션 복원
+                updateCarouselPosition();
+            }
+        });
+
         // 자동 슬라이드 (4초마다 1칸 이동)
         setInterval(() => {
             currentIndex = (currentIndex + 1) % (totalCards - visibleCards + 1);
             updateCarouselPosition();
         }, 4000);
-
-        // 드래그 이벤트
-        carousel.addEventListener('mousedown', (e) => {
-            isDragging = true;
-            startX = e.pageX - carousel.offsetLeft;
-            scrollLeft = currentIndex * (carousel.offsetWidth / visibleCards + gap);
-        });
-
-        carousel.addEventListener('mouseup', () => {
-            isDragging = false;
-        });
-
-        carousel.addEventListener('mouseleave', () => {
-            isDragging = false;
-        });
-
-        carousel.addEventListener('mousemove', (e) => {
-            if (!isDragging) return;
-            const x = e.pageX - carousel.offsetLeft;
-            const walk = x - startX;
-            if (walk > 50) {
-                prevBtn.click(); // 왼쪽으로 이동
-                isDragging = false;
-            } else if (walk < -50) {
-                nextBtn.click(); // 오른쪽으로 이동
-                isDragging = false;
-            }
-        });
 
         // 초기화
         updateCarouselPosition();
