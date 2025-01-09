@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Slide Banner</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f0f0f0;
+        }
+
+        .slider-container {
+            position: relative;
+            width: 80%;
+            max-width: 800px;
+            overflow: hidden;
+            border: 1px solid #ddd;
+            background: #fff;
+        }
+
+        .slider {
+            display: flex;
+            transition: transform 0.5s ease-in-out; /* 부드러운 애니메이션 */
+        }
+
+        .slider-card {
+            min-width: 25%; /* 화면에 4개씩 표시 */
+            box-sizing: border-box;
+            padding: 20px;
+            text-align: center;
+            background: #eee;
+            border-right: 1px solid #ddd;
+        }
+
+        .slider-card:last-child {
+            border-right: none;
+        }
+
+        .slider-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(0, 0, 0, 0.5);
+            color: white;
+            border: none;
+            padding: 10px;
+            cursor: pointer;
+            z-index: 100;
+        }
+
+        .slider-btn.left {
+            left: 10px;
+        }
+
+        .slider-btn.right {
+            right: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="slider-container">
+        <div class="slider" id="slider">
+            <div class="slider-card">Card 1</div>
+            <div class="slider-card">Card 2</div>
+            <div class="slider-card">Card 3</div>
+            <div class="slider-card">Card 4</div>
+            <div class="slider-card">Card 5</div>
+            <div class="slider-card">Card 6</div>
+            <div class="slider-card">Card 7</div>
+            <div class="slider-card">Card 8</div>
+        </div>
+        <button class="slider-btn left" id="prevBtn">&#9664;</button>
+        <button class="slider-btn right" id="nextBtn">&#9654;</button>
+    </div>
+
+    <script>
+        const slider = document.getElementById('slider');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        const cardCount = 8; // 카드 개수
+        const visibleCards = 4; // 한 화면에 보이는 카드 수
+        const maxIndex = cardCount - visibleCards; // 마지막 인덱스 계산
+        let currentIndex = 0;
+        let isAnimating = false; // 애니메이션 상태 추적
+
+        function updateSliderPosition() {
+            slider.style.transform = `translateX(-${(currentIndex * 100) / visibleCards}%)`;
+        }
+
+        function slideNext() {
+            if (isAnimating) return; // 애니메이션 중에는 실행하지 않음
+            isAnimating = true;
+            currentIndex = (currentIndex + 1) % (maxIndex + 1); // 마지막 인덱스에서 순환
+            updateSliderPosition();
+            setTimeout(() => (isAnimating = false), 500); // 애니메이션 완료 후 상태 초기화
+        }
+
+        function slidePrev() {
+            if (isAnimating) return;
+            isAnimating = true;
+            currentIndex = (currentIndex - 1 + (maxIndex + 1)) % (maxIndex + 1); // 이전 인덱스 순환
+            updateSliderPosition();
+            setTimeout(() => (isAnimating = false), 500);
+        }
+
+        prevBtn.addEventListener('click', slidePrev);
+        nextBtn.addEventListener('click', slideNext);
+
+        // 자동 슬라이드
+        setInterval(() => {
+            slideNext();
+        }, 2000);
+
+        // 초기 위치 설정
+        updateSliderPosition();
+    </script>
+</body>
+</html>
