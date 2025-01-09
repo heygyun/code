@@ -79,35 +79,38 @@
     </div>
 
     <script>
-document.addEventListener('DOMContentLoaded', () => {
-    // UTC 기준 목표 날짜 설정
-    const targetDate = new Date('2025-02-8T23:59:59+09:00'); // KST 기준
+        document.addEventListener('DOMContentLoaded', () => {
+            // UTC 기준 목표 날짜 설정
+            const targetDate = new Date(Date.UTC(2025, 1, 8, 14, 59, 59)); // UTC 기준 2025-02-08 23:59:59 KST
+            console.log('현재 시간 (브라우저):', new Date());
+            console.log('목표 시간 (KST):', targetDate);
 
-    function updateCountdown() {
-        const now = new Date();
-        const diff = targetDate - now;
+            function updateCountdown() {
+                const now = new Date();
+                const diff = targetDate - now;
 
-        if (diff <= 0) {
-            document.getElementById('countdown').innerHTML = "종료되었습니다";
-            clearInterval(timerInterval);
-            return;
-        }
+                console.log('남은 시간 (ms):', diff);
 
-        const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-        const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-        const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-        const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+                if (diff <= 0) {
+                    document.getElementById('countdown').innerHTML = "종료되었습니다";
+                    clearInterval(timerInterval);
+                    return;
+                }
 
-        document.getElementById('days').textContent = days.toString().padStart(2, '0');
-        document.getElementById('hours').textContent = hours.toString().padStart(2, '0');
-        document.getElementById('minutes').textContent = minutes.toString().padStart(2, '0');
-        document.getElementById('seconds').textContent = seconds.toString().padStart(2, '0');
-    }
+                const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((diff % (1000 * 60)) / 1000);
 
-    const timerInterval = setInterval(updateCountdown, 1000);
-    updateCountdown();
-});
+                document.getElementById('days').textContent = days.toString().padStart(2, '0');
+                document.getElementById('hours').textContent = hours.toString().padStart(2, '0');
+                document.getElementById('minutes').textContent = minutes.toString().padStart(2, '0');
+                document.getElementById('seconds').textContent = seconds.toString().padStart(2, '0');
+            }
 
+            const timerInterval = setInterval(updateCountdown, 1000);
+            updateCountdown();
+        });
     </script>
 </body>
 </html>
