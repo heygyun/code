@@ -3,123 +3,182 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Slide Banner</title>
+    <title>Carousel Banner</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
+            font-family: Arial, sans-serif;
+            background-color: #333;
+            color: #fff;
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
-            background-color: #f0f0f0;
         }
 
-        .slider-container {
+        .carousel-container {
             position: relative;
             width: 80%;
-            max-width: 800px;
+            max-width: 1200px;
             overflow: hidden;
-            border: 1px solid #ddd;
-            background: #fff;
-        }
-
-        .slider {
             display: flex;
-            transition: transform 0.5s ease-in-out; /* 부드러운 애니메이션 */
+            justify-content: center;
+            align-items: center;
         }
 
-        .slider-card {
-            min-width: 25%; /* 화면에 4개씩 표시 */
-            box-sizing: border-box;
-            padding: 20px;
+        .carousel {
+            display: flex;
+            transition: transform 0.5s ease-in-out;
+            gap: 10px; /* 카드 간의 간격 */
+        }
+
+        .carousel-card {
+            flex: 0 0 calc(25% - 10px); /* 화면에 4개 표시 */
+            border-radius: 10px; /* 카드의 라운드 값 */
+            background: #222;
+            overflow: hidden;
+        }
+
+        .carousel-card img {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+        }
+
+        .carousel-card .card-text {
+            padding: 10px;
             text-align: center;
-            background: #eee;
-            border-right: 1px solid #ddd;
+            font-size: 16px;
+            background: gray; /* 텍스트 박스 배경 */
+            color: #fff;
         }
 
-        .slider-card:last-child {
-            border-right: none;
-        }
-
-        .slider-btn {
+        .carousel-btn {
             position: absolute;
             top: 50%;
             transform: translateY(-50%);
-            background: rgba(0, 0, 0, 0.5);
-            color: white;
-            border: none;
-            padding: 10px;
+            width: 40px;
+            height: 40px;
+            border: 1px solid #fff;
+            background: transparent;
+            border-radius: 50%;
             cursor: pointer;
-            z-index: 100;
+            opacity: 0;
+            transition: opacity 0.3s;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
 
-        .slider-btn.left {
+        .carousel-btn:hover {
+            opacity: 1; /* 호버 시 버튼 표시 */
+        }
+
+        .carousel-btn.left {
             left: 10px;
         }
 
-        .slider-btn.right {
+        .carousel-btn.right {
             right: 10px;
+        }
+
+        .carousel-btn::before {
+            content: '';
+            display: block;
+            width: 10px;
+            height: 10px;
+            border: solid #fff;
+            border-width: 2px 2px 0 0;
+            transform: rotate(45deg);
+        }
+
+        .carousel-btn.left::before {
+            transform: rotate(-135deg);
+        }
+
+        .carousel-btn.right::before {
+            transform: rotate(45deg);
         }
     </style>
 </head>
 <body>
-    <div class="slider-container">
-        <div class="slider" id="slider">
-            <div class="slider-card">Card 1</div>
-            <div class="slider-card">Card 2</div>
-            <div class="slider-card">Card 3</div>
-            <div class="slider-card">Card 4</div>
-            <div class="slider-card">Card 5</div>
-            <div class="slider-card">Card 6</div>
-            <div class="slider-card">Card 7</div>
-            <div class="slider-card">Card 8</div>
+    <div class="carousel-container">
+        <button class="carousel-btn left" id="prevBtn"></button>
+        <div class="carousel" id="carousel">
+            <!-- 카드 8개 -->
+            <div class="carousel-card">
+                <img src="https://i.imgur.com/kP7YSK3.gif" alt="Card Image">
+                <div class="card-text">Card 1</div>
+            </div>
+            <div class="carousel-card">
+                <img src="https://i.imgur.com/kP7YSK3.gif" alt="Card Image">
+                <div class="card-text">Card 2</div>
+            </div>
+            <div class="carousel-card">
+                <img src="https://i.imgur.com/kP7YSK3.gif" alt="Card Image">
+                <div class="card-text">Card 3</div>
+            </div>
+            <div class="carousel-card">
+                <img src="https://i.imgur.com/kP7YSK3.gif" alt="Card Image">
+                <div class="card-text">Card 4</div>
+            </div>
+            <div class="carousel-card">
+                <img src="https://i.imgur.com/kP7YSK3.gif" alt="Card Image">
+                <div class="card-text">Card 5</div>
+            </div>
+            <div class="carousel-card">
+                <img src="https://i.imgur.com/kP7YSK3.gif" alt="Card Image">
+                <div class="card-text">Card 6</div>
+            </div>
+            <div class="carousel-card">
+                <img src="https://i.imgur.com/kP7YSK3.gif" alt="Card Image">
+                <div class="card-text">Card 7</div>
+            </div>
+            <div class="carousel-card">
+                <img src="https://i.imgur.com/kP7YSK3.gif" alt="Card Image">
+                <div class="card-text">Card 8</div>
+            </div>
         </div>
-        <button class="slider-btn left" id="prevBtn">&#9664;</button>
-        <button class="slider-btn right" id="nextBtn">&#9654;</button>
+        <button class="carousel-btn right" id="nextBtn"></button>
     </div>
 
     <script>
-        const slider = document.getElementById('slider');
+        const carousel = document.getElementById('carousel');
         const prevBtn = document.getElementById('prevBtn');
         const nextBtn = document.getElementById('nextBtn');
-        const cardCount = 8; // 카드 개수
-        const visibleCards = 4; // 한 화면에 보이는 카드 수
-        const maxIndex = cardCount - visibleCards; // 마지막 인덱스 계산
+        const totalCards = 8;
+        const visibleCards = 4;
+        const gap = 10; // 카드 간 간격
+        const cardWidth = (carousel.offsetWidth - (visibleCards - 1) * gap) / visibleCards;
         let currentIndex = 0;
-        let isAnimating = false; // 애니메이션 상태 추적
 
-        function updateSliderPosition() {
-            slider.style.transform = `translateX(-${(currentIndex * 100) / visibleCards}%)`;
+        // 슬라이드 이동 함수
+        function updateCarouselPosition() {
+            const offset = -(currentIndex * (cardWidth + gap));
+            carousel.style.transform = `translateX(${offset}px)`;
         }
 
-        function slideNext() {
-            if (isAnimating) return; // 애니메이션 중에는 실행하지 않음
-            isAnimating = true;
-            currentIndex = (currentIndex + 1) % (maxIndex + 1); // 마지막 인덱스에서 순환
-            updateSliderPosition();
-            setTimeout(() => (isAnimating = false), 500); // 애니메이션 완료 후 상태 초기화
-        }
+        // 이전 버튼 클릭
+        prevBtn.addEventListener('click', () => {
+            currentIndex = Math.max(0, currentIndex - 1);
+            updateCarouselPosition();
+        });
 
-        function slidePrev() {
-            if (isAnimating) return;
-            isAnimating = true;
-            currentIndex = (currentIndex - 1 + (maxIndex + 1)) % (maxIndex + 1); // 이전 인덱스 순환
-            updateSliderPosition();
-            setTimeout(() => (isAnimating = false), 500);
-        }
-
-        prevBtn.addEventListener('click', slidePrev);
-        nextBtn.addEventListener('click', slideNext);
+        // 다음 버튼 클릭
+        nextBtn.addEventListener('click', () => {
+            currentIndex = Math.min(totalCards - visibleCards, currentIndex + 1);
+            updateCarouselPosition();
+        });
 
         // 자동 슬라이드
         setInterval(() => {
-            slideNext();
-        }, 2000);
+            currentIndex = (currentIndex + 4) % totalCards; // 4칸씩 이동
+            updateCarouselPosition();
+        }, 1300);
 
-        // 초기 위치 설정
-        updateSliderPosition();
+        // 초기화
+        updateCarouselPosition();
     </script>
 </body>
 </html>
