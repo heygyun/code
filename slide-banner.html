@@ -9,8 +9,8 @@
             margin: 0;
             padding: 0;
             font-family: Arial, sans-serif;
-            background-color: #fff;
-            color: #fff;
+            background-color: #fff; /* 전체 배경 흰색 */
+            color: #333;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -29,14 +29,14 @@
 
         .carousel {
             display: flex;
-            transition: transform 0.5s ease-in-out;
+            transition: transform 0.3s ease-in-out; /* 슬라이드 속도 조정 */
             gap: 10px; /* 카드 간의 간격 */
         }
 
         .carousel-card {
-            flex: 0 0 calc(25% - 10px); /* 화면에 4개 표시 */
+            flex: 0 0 calc((100% - 30px) / 4); /* 화면에 4개 표시 (간격 포함) */
             border-radius: 10px; /* 카드의 라운드 값 */
-            background: #222;
+            background: #f5f5f5;
             overflow: hidden;
         }
 
@@ -60,7 +60,7 @@
             transform: translateY(-50%);
             width: 40px;
             height: 40px;
-            border: 1px solid #fff;
+            border: 1px solid #333;
             background: transparent;
             border-radius: 50%;
             cursor: pointer;
@@ -88,7 +88,7 @@
             display: block;
             width: 10px;
             height: 10px;
-            border: solid #fff;
+            border: solid #333;
             border-width: 2px 2px 0 0;
             transform: rotate(45deg);
         }
@@ -150,7 +150,7 @@
         const totalCards = 8;
         const visibleCards = 4;
         const gap = 10; // 카드 간 간격
-        const cardWidth = (carousel.offsetWidth - (visibleCards - 1) * gap) / visibleCards;
+        const cardWidth = carousel.offsetWidth / visibleCards - gap; // 카드 너비 계산
         let currentIndex = 0;
 
         // 슬라이드 이동 함수
@@ -171,11 +171,11 @@
             updateCarouselPosition();
         });
 
-        // 자동 슬라이드
+        // 자동 슬라이드 (2초마다 1칸 이동)
         setInterval(() => {
-            currentIndex = (currentIndex + 4) % totalCards; // 4칸씩 이동
+            currentIndex = (currentIndex + 1) % (totalCards - visibleCards + 1);
             updateCarouselPosition();
-        }, 1300);
+        }, 2000);
 
         // 초기화
         updateCarouselPosition();
