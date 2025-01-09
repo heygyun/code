@@ -20,7 +20,7 @@
         .carousel-container {
             position: relative;
             width: 80%;
-            max-width: 1232px;
+            max-width: 1200px;
             overflow: hidden;
         }
 
@@ -36,25 +36,27 @@
         }
 
         .carousel-card {
-            flex: 0 0 calc((100% - 30px) / 4); /* 화면에 4개 표시 */
-            border-radius: 0px;
+            flex: 0 0 calc((100% - 30px) / 4); /* 화면에 4개 표시 (간격 포함) */
+            border-radius: 10px;
             background: #f5f5f5;
             overflow: hidden;
+            user-select: none; /* 텍스트 선택 방지 */
         }
 
         .carousel-card img {
             width: 100%;
             height: 150px;
-            border-radius: 10px;
             object-fit: cover;
+            pointer-events: none; /* 이미지 드래그 방지 */
         }
 
         .carousel-card .card-text {
             padding: 10px;
             text-align: center;
             font-size: 16px;
-            background: #111
-            color: #fff;
+            background: #111;
+            color: #999;
+            user-select: none; /* 텍스트 선택 방지 */
         }
 
         .carousel-btn {
@@ -63,7 +65,7 @@
             transform: translateY(-50%);
             width: 40px;
             height: 40px;
-            border: 1px solid #fff;
+            border: 1px solid #333;
             background: transparent;
             border-radius: 50%;
             cursor: pointer;
@@ -107,35 +109,35 @@
             <!-- 카드 8개 -->
             <div class="carousel-card">
                 <img src="https://i.imgur.com/kP7YSK3.gif" alt="Card Image">
-                <div class="card-text">입터짐이 이제 사라진 것 같아요</div>
+                <div class="card-text">Card 1</div>
             </div>
             <div class="carousel-card">
                 <img src="https://i.imgur.com/kP7YSK3.gif" alt="Card Image">
-                <div class="card-text">입터짐이 이제 사라진 것 같아요</div>
+                <div class="card-text">Card 2</div>
             </div>
             <div class="carousel-card">
                 <img src="https://i.imgur.com/kP7YSK3.gif" alt="Card Image">
-                <div class="card-text">입터짐이 이제 사라진 것 같아요</div>
+                <div class="card-text">Card 3</div>
             </div>
             <div class="carousel-card">
                 <img src="https://i.imgur.com/kP7YSK3.gif" alt="Card Image">
-                <div class="card-text">입터짐이 이제 사라진 것 같아요</div>
+                <div class="card-text">Card 4</div>
             </div>
             <div class="carousel-card">
                 <img src="https://i.imgur.com/kP7YSK3.gif" alt="Card Image">
-                <div class="card-text">입터짐이 이제 사라진 것 같아요</div>
+                <div class="card-text">Card 5</div>
             </div>
             <div class="carousel-card">
                 <img src="https://i.imgur.com/kP7YSK3.gif" alt="Card Image">
-                <div class="card-text">입터짐이 이제 사라진 것 같아요</div>
+                <div class="card-text">Card 6</div>
             </div>
             <div class="carousel-card">
                 <img src="https://i.imgur.com/kP7YSK3.gif" alt="Card Image">
-                <div class="card-text">입터짐이 이제 사라진 것 같아요</div>
+                <div class="card-text">Card 7</div>
             </div>
             <div class="carousel-card">
                 <img src="https://i.imgur.com/kP7YSK3.gif" alt="Card Image">
-                <div class="card-text">입터짐이 이제 사라진 것 같아요</div>
+                <div class="card-text">Card 8</div>
             </div>
         </div>
         <button class="carousel-btn right" id="nextBtn"></button>
@@ -147,7 +149,7 @@
         const nextBtn = document.getElementById('nextBtn');
         const totalCards = 8;
         const visibleCards = 4;
-        const gap = 10; // 카드 간 간격
+        const gap = 10;
         let currentIndex = 0;
         let startX = 0;
         let moveX = 0;
@@ -171,30 +173,28 @@
             updateCarouselPosition();
         });
 
-        // 드래그 시작
+        // 드래그 이벤트
         carousel.addEventListener('mousedown', (e) => {
             isDragging = true;
             startX = e.pageX;
-            carousel.style.transition = 'none'; // 드래그 중에는 애니메이션 제거
+            carousel.style.transition = 'none';
         });
 
-        // 드래그 이동
         carousel.addEventListener('mousemove', (e) => {
             if (!isDragging) return;
             moveX = e.pageX - startX;
             carousel.style.transform = `translateX(calc(${-(currentIndex * (carousel.offsetWidth / visibleCards + gap))}px + ${moveX}px))`;
         });
 
-        // 드래그 종료
         carousel.addEventListener('mouseup', () => {
             isDragging = false;
             if (moveX > 50) {
-                prevBtn.click(); // 왼쪽 이동
+                prevBtn.click();
             } else if (moveX < -50) {
-                nextBtn.click(); // 오른쪽 이동
+                nextBtn.click();
             }
             moveX = 0;
-            carousel.style.transition = 'transform 0.3s ease-in-out'; // 애니메이션 복원
+            carousel.style.transition = 'transform 0.3s ease-in-out';
             updateCarouselPosition();
         });
 
@@ -202,7 +202,7 @@
             if (isDragging) {
                 isDragging = false;
                 moveX = 0;
-                carousel.style.transition = 'transform 0.3s ease-in-out'; // 애니메이션 복원
+                carousel.style.transition = 'transform 0.3s ease-in-out';
                 updateCarouselPosition();
             }
         });
