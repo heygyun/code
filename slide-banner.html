@@ -31,7 +31,7 @@
         }
 
         .carousel-card {
-            flex: 0 0 100%; /* 기본: 한 카드만 표시 (중앙 정렬) */
+            flex: 0 0 calc(100% / 4 - 10px); /* 4개 표시 */
             border-radius: 10px;
             background: #f5f5f5;
             overflow: hidden;
@@ -42,7 +42,7 @@
             width: 100%;
             height: 150px;
             object-fit: cover;
-            pointer-events: none; /* 이미지 드래그 방지 */
+            pointer-events: none;
         }
 
         .carousel-card .card-text {
@@ -50,7 +50,7 @@
             text-align: center;
             font-size: 16px;
             color: #111;
-            user-select: none; /* 텍스트 선택 방지 */
+            user-select: none;
         }
 
         .carousel-btn {
@@ -59,7 +59,7 @@
             transform: translateY(-50%);
             width: 40px;
             height: 40px;
-            border: 1px solid #fff; /* 테두리 흰색 */
+            border: 1px solid #fff;
             background: transparent;
             border-radius: 50%;
             cursor: pointer;
@@ -82,7 +82,7 @@
             display: block;
             width: 10px;
             height: 10px;
-            border: solid #fff; /* 화살표 흰색 */
+            border: solid #fff;
             border-width: 2px 2px 0 0;
             transform: rotate(45deg);
         }
@@ -95,9 +95,9 @@
             transform: rotate(45deg);
         }
 
-        @media (min-width: 769px) {
+        @media (max-width: 768px) {
             .carousel-card {
-                flex: 0 0 calc((100% - 30px) / 4); /* 데스크톱: 4개 표시 */
+                flex: 0 0 100%; /* 한 번에 한 카드 표시 */
             }
         }
     </style>
@@ -106,7 +106,7 @@
     <div class="carousel-container">
         <button class="carousel-btn left" id="prevBtn"></button>
         <div class="carousel" id="carousel">
-            <!-- 카드 복제 (8번 뒤에 1번, 1번 앞에 8번 추가) -->
+            <!-- 카드 복제 -->
             <div class="carousel-card" data-index="8">
                 <img src="https://i.imgur.com/kP7YSK3.gif" alt="Card Image">
                 <div class="card-text">입터짐이 이제 사라진 것 같아요</div>
@@ -155,12 +155,20 @@
         const carousel = document.getElementById('carousel');
         const prevBtn = document.getElementById('prevBtn');
         const nextBtn = document.getElementById('nextBtn');
-        let currentIndex = 1;
+        const gap = 10;
         const totalCards = 8;
-        const cardWidth = carousel.offsetWidth / 4; // 데스크톱 기본 4개 표시
+        let currentIndex = 1;
+
+        // 카드 크기 계산 함수
+        function calculateCardWidth() {
+            const containerWidth = document.querySelector('.carousel-container').offsetWidth;
+            const visibleCards = window.innerWidth <= 768 ? 1 : 4; // 모바일은 1개, 데스크톱은 4개
+            return (containerWidth - (visibleCards - 1) * gap) / visibleCards;
+        }
 
         function updateCarouselPosition() {
-            const offset = -(currentIndex * (cardWidth + 10));
+            const cardWidth = calculateCardWidth();
+            const offset = -(currentIndex * (cardWidth + gap));
             carousel.style.transform = `translateX(${offset}px)`;
         }
 
@@ -194,6 +202,14 @@
             checkLoop();
         });
 
+        // 자동 슬라이드 설정 (4초마다 한 칸 이동)
+        setInterval(() => {
+            currentIndex++;
+            updateCarouselPosition();
+            checkLoop();
+        }, 4000);
+
+        // 초기화 및 리사이즈 이벤트
         window.addEventListener('resize', updateCarouselPosition);
         updateCarouselPosition();
     </script>
