@@ -28,10 +28,12 @@
             display: flex;
             transition: transform 0.3s ease-in-out;
             gap: 10px;
+            padding-left: calc((100% - 1232px) / 2); /* 양옆 여백을 주어 중앙 정렬 */
+            padding-right: calc((100% - 1232px) / 2);
         }
 
         .carousel-card {
-            flex: 0 0 100%; /* 기본: 한 카드만 표시 */
+            flex: 0 0 calc(25% - 10px); /* 4개 표시 */
             border-radius: 10px;
             background: #f5f5f5;
             overflow: hidden;
@@ -95,9 +97,14 @@
             transform: rotate(45deg);
         }
 
-        @media (min-width: 769px) {
+        @media (max-width: 768px) {
             .carousel-card {
-                flex: 0 0 calc(100% / 4 - 10px); /* 데스크톱: 4개 표시 */
+                flex: 0 0 100%; /* 모바일: 한 번에 한 카드만 표시 */
+            }
+
+            .carousel {
+                padding-left: 0;
+                padding-right: 0;
             }
         }
     </style>
@@ -147,75 +154,43 @@
         const carousel = document.getElementById('carousel');
         const prevBtn = document.getElementById('prevBtn');
         const nextBtn = document.getElementById('nextBtn');
-        const gap = 10;
         let currentIndex = 0;
-        let cardWidth;
-
-        // 초기화 함수
-        function initializeCarousel() {
-            const cards = [...carousel.children];
-            const firstClone = cards.slice(0, 4).map(card => card.cloneNode(true));
-            const lastClone = cards.slice(-4).map(card => card.cloneNode(true));
-
-            firstClone.forEach(clone => carousel.appendChild(clone));
-            lastClone.reverse().forEach(clone => carousel.insertBefore(clone, carousel.firstChild));
-
-            currentIndex = 4; // 첫 번째 카드 인덱스
-            updateCardWidth();
-            updateCarouselPosition(false);
-        }
 
         function updateCardWidth() {
             const containerWidth = document.querySelector('.carousel-container').offsetWidth;
             const visibleCards = window.innerWidth <= 768 ? 1 : 4;
-            cardWidth = (containerWidth - (visibleCards - 1) * gap) / visibleCards;
+            const cardWidth = (containerWidth - (visibleCards - 1) * 10) / visibleCards;
+            return cardWidth;
         }
 
         function updateCarouselPosition(transition = true) {
+            const cardWidth = updateCardWidth();
             if (transition) carousel.style.transition = 'transform 0.3s ease-in-out';
             else carousel.style.transition = 'none';
 
-            const offset = -(currentIndex * (cardWidth + gap));
+            const offset = -(currentIndex * (cardWidth + 10));
             carousel.style.transform = `translateX(${offset}px)`;
         }
 
-        function checkLoop() {
-            const totalCards = carousel.children.length;
-            const visibleCards = window.innerWidth <= 768 ? 1 : 4;
-
-            if (currentIndex === 0) {
-                currentIndex = totalCards - visibleCards * 2;
-                updateCarouselPosition(false);
-            } else if (currentIndex === totalCards - visibleCards) {
-                currentIndex = visibleCards;
-                updateCarouselPosition(false);
-            }
-        }
-
         prevBtn.addEventListener('click', () => {
-            currentIndex--;
+            currentIndex = (currentIndex - 1 + 8) % 8;
             updateCarouselPosition();
-            checkLoop();
         });
 
         nextBtn.addEventListener('click', () => {
-            currentIndex++;
+            currentIndex = (currentIndex + 1) % 8;
             updateCarouselPosition();
-            checkLoop();
         });
 
         setInterval(() => {
-            currentIndex++;
-            updateCarouselPosition();
-            checkLoop();
+            nextBtn.click();
         }, 4000);
 
         window.addEventListener('resize', () => {
-            updateCardWidth();
             updateCarouselPosition(false);
         });
 
-        initializeCarousel();
+        updateCarouselPosition(false);
     </script>
 </body>
 </html>
