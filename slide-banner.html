@@ -54,7 +54,6 @@
             padding: 10px;
             text-align: center;
             font-size: 16px;
-            
             color: #111;
             user-select: none; /* 텍스트 선택 방지 */
         }
@@ -99,6 +98,13 @@
 
         .carousel-btn.right::before {
             transform: rotate(45deg);
+        }
+
+        /* 모바일 화면 스타일 */
+        @media (max-width: 768px) {
+            .carousel-card {
+                flex: 0 0 100%; /* 한 번에 한 카드만 표시 */
+            }
         }
     </style>
 </head>
@@ -156,20 +162,17 @@
         const prevBtn = document.getElementById('prevBtn');
         const nextBtn = document.getElementById('nextBtn');
         const totalCards = 8;
-        const visibleCards = 4;
         const gap = 10;
-        const cardWidth = carousel.offsetWidth / visibleCards - gap;
         let currentIndex = 1;
 
         // 슬라이드 이동 함수
         function updateCarouselPosition() {
-            const offset = -(currentIndex * (cardWidth + gap));
+            const offset = -(currentIndex * (carousel.offsetWidth / 4 + gap));
             carousel.style.transform = `translateX(${offset}px)`;
         }
 
         // 무한 루프 처리
         function checkLoop() {
-            const cards = document.querySelectorAll('.carousel-card');
             if (currentIndex === 0) {
                 currentIndex = totalCards;
                 carousel.style.transition = 'none'; // 애니메이션 제거
