@@ -28,15 +28,10 @@
             display: flex;
             transition: transform 0.3s ease-in-out;
             gap: 10px;
-            cursor: grab;
-        }
-
-        .carousel:active {
-            cursor: grabbing;
         }
 
         .carousel-card {
-            flex: 0 0 calc((100% - 30px) / 4); /* 화면에 4개 표시 */
+            flex: 0 0 calc(25% - 10px); /* 4개 표시 (데스크톱 기본) */
             border-radius: 10px;
             background: #f5f5f5;
             overflow: hidden;
@@ -105,6 +100,10 @@
             .carousel-card {
                 flex: 0 0 100%; /* 한 번에 한 카드만 표시 */
             }
+
+            .carousel-container {
+                padding: 0 10px; /* 양쪽 여백 추가 */
+            }
         }
     </style>
 </head>
@@ -145,14 +144,6 @@
                 <img src="https://i.imgur.com/kP7YSK3.gif" alt="Card Image">
                 <div class="card-text">입터짐이 이제 사라진 것 같아요</div>
             </div>
-            <div class="carousel-card" data-index="8">
-                <img src="https://i.imgur.com/kP7YSK3.gif" alt="Card Image">
-                <div class="card-text">입터짐이 이제 사라진 것 같아요</div>
-            </div>
-            <div class="carousel-card" data-index="1">
-                <img src="https://i.imgur.com/kP7YSK3.gif" alt="Card Image">
-                <div class="card-text">입터짐이 이제 사라진 것 같아요</div>
-            </div>
         </div>
         <button class="carousel-btn right" id="nextBtn"></button>
     </div>
@@ -161,28 +152,35 @@
         const carousel = document.getElementById('carousel');
         const prevBtn = document.getElementById('prevBtn');
         const nextBtn = document.getElementById('nextBtn');
-        const totalCards = 8;
         const gap = 10;
         let currentIndex = 1;
 
-        // 슬라이드 이동 함수
+        // 화면 너비에 따라 카드 크기 계산
+        function calculateCardWidth() {
+            const containerWidth = document.querySelector('.carousel-container').offsetWidth;
+            const visibleCards = window.innerWidth <= 768 ? 1 : 4; // 모바일은 1개, 데스크톱은 4개
+            return (containerWidth - (visibleCards - 1) * gap) / visibleCards;
+        }
+
         function updateCarouselPosition() {
-            const offset = -(currentIndex * (carousel.offsetWidth / 4 + gap));
+            const cardWidth = calculateCardWidth();
+            const offset = -(currentIndex * (cardWidth + gap));
             carousel.style.transform = `translateX(${offset}px)`;
         }
 
         // 무한 루프 처리
         function checkLoop() {
+            const totalCards = carousel.children.length;
             if (currentIndex === 0) {
-                currentIndex = totalCards;
-                carousel.style.transition = 'none'; // 애니메이션 제거
+                currentIndex = totalCards - 2; // 마지막 복제 카드로 이동
+                carousel.style.transition = 'none';
                 updateCarouselPosition();
                 setTimeout(() => {
                     carousel.style.transition = 'transform 0.3s ease-in-out';
                 }, 50);
-            } else if (currentIndex === totalCards + 1) {
-                currentIndex = 1;
-                carousel.style.transition = 'none'; // 애니메이션 제거
+            } else if (currentIndex === totalCards - 1) {
+                currentIndex = 1; // 첫 번째 실제 카드로 이동
+                carousel.style.transition = 'none';
                 updateCarouselPosition();
                 setTimeout(() => {
                     carousel.style.transition = 'transform 0.3s ease-in-out';
@@ -204,14 +202,8 @@
             checkLoop();
         });
 
-        // 자동 슬라이드
-        setInterval(() => {
-            currentIndex++;
-            updateCarouselPosition();
-            checkLoop();
-        }, 4000);
-
-        // 초기화
+        // 초기화 및 리사이즈 이벤트
+        window.addEventListener('resize', updateCarouselPosition);
         updateCarouselPosition();
     </script>
 </body>
