@@ -28,12 +28,10 @@
             display: flex;
             transition: transform 0.3s ease-in-out;
             gap: 10px;
-            padding-left: calc((100% - 1232px) / 2); /* 양옆 여백을 주어 중앙 정렬 */
-            padding-right: calc((100% - 1232px) / 2);
         }
 
         .carousel-card {
-            flex: 0 0 calc(25% - 10px); /* 4개 표시 */
+            flex: 0 0 calc(100% / 4 - 10px); /* 4개 표시 */
             border-radius: 10px;
             background: #f5f5f5;
             overflow: hidden;
@@ -101,11 +99,6 @@
             .carousel-card {
                 flex: 0 0 100%; /* 모바일: 한 번에 한 카드만 표시 */
             }
-
-            .carousel {
-                padding-left: 0;
-                padding-right: 0;
-            }
         }
     </style>
 </head>
@@ -155,12 +148,24 @@
         const prevBtn = document.getElementById('prevBtn');
         const nextBtn = document.getElementById('nextBtn');
         let currentIndex = 0;
+        const visibleCards = window.innerWidth <= 768 ? 1 : 4;
+
+        function initializeCarousel() {
+            const cards = [...carousel.children];
+            const firstClone = cards.slice(0, visibleCards).map(card => card.cloneNode(true));
+            const lastClone = cards.slice(-visibleCards).map(card => card.cloneNode(true));
+
+            // 복제된 카드 추가
+            firstClone.forEach(clone => carousel.appendChild(clone));
+            lastClone.reverse().forEach(clone => carousel.insertBefore(clone, carousel.firstChild));
+
+            currentIndex = visibleCards; // 첫 번째 실제 카드 위치
+            updateCarouselPosition(false);
+        }
 
         function updateCardWidth() {
             const containerWidth = document.querySelector('.carousel-container').offsetWidth;
-            const visibleCards = window.innerWidth <= 768 ? 1 : 4;
-            const cardWidth = (containerWidth - (visibleCards - 1) * 10) / visibleCards;
-            return cardWidth;
+            return (containerWidth - (visibleCards - 1) * 10) / visibleCards;
         }
 
         function updateCarouselPosition(transition = true) {
@@ -172,14 +177,28 @@
             carousel.style.transform = `translateX(${offset}px)`;
         }
 
+        function checkLoop() {
+            const totalCards = carousel.children.length;
+
+            if (currentIndex === 0) {
+                currentIndex = totalCards - visibleCards * 2;
+                updateCarouselPosition(false);
+            } else if (currentIndex === totalCards - visibleCards) {
+                currentIndex = visibleCards;
+                updateCarouselPosition(false);
+            }
+        }
+
         prevBtn.addEventListener('click', () => {
-            currentIndex = (currentIndex - 1 + 8) % 8;
+            currentIndex--;
             updateCarouselPosition();
+            checkLoop();
         });
 
         nextBtn.addEventListener('click', () => {
-            currentIndex = (currentIndex + 1) % 8;
+            currentIndex++;
             updateCarouselPosition();
+            checkLoop();
         });
 
         setInterval(() => {
@@ -190,7 +209,7 @@
             updateCarouselPosition(false);
         });
 
-        updateCarouselPosition(false);
+        initializeCarousel();
     </script>
 </body>
 </html>
