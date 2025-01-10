@@ -68,13 +68,13 @@
         /* 반응형 디자인 */
         @media (max-width: 768px) {
             .section {
-                flex-direction: column; /* 세로 배치 */
+                flex-direction: column-reverse; /* 텍스트 상단, 동영상 하단 */
                 align-items: center;
-                text-align: center; /* 텍스트 가운데 정렬 */
+                text-align: center;
             }
 
             .video-container {
-                margin: 0 0 20px 0; /* 하단 간격 추가 */
+                margin: 20px 0 0 0; /* 텍스트와 간격 추가 */
             }
 
             .text-container {
@@ -82,7 +82,7 @@
             }
 
             .video-container iframe {
-                height: 200px; /* 모바일에서 동영상 높이 축소 */
+                height: 280px; /* 모바일에서 동영상 높이 증가 */
             }
 
             .text-container h2 {
